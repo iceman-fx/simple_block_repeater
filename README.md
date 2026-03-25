@@ -187,15 +187,8 @@ $('.sbr-repeater').on('sbr:move', function (e, detail) {
 </label>
 ```
 
-**Tipp:** Um immer einen Wert in der JSON zu erhalten, ist es sinnvoll, ein zusätzliches hidden-Feld mit zu übergeben.
-Dieses wird auch dann übertragen, wenn die Checkbox nicht angehakt ist.
-```html
-<input type="hidden" name="fullwidth" value="0">
-<label class="checkbox-inline">
-    <input type="checkbox" name="fullwidth" value="1" data-default="checked" data-selected="{fullwidth}">
-    Volle Breite
-</label>
-```
+**Hinweis:** Der Repeater erstellt automatisch ein hidden-Feld für jede Checkbox, da nicht angehakte Checkboxen nicht vom Browser zur Speicherung übertragen werden.
+
 
 ### Radio
 ```html
