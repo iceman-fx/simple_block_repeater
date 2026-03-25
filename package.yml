@@ -1,0 +1,8 @@
+package: simple_block_repeater
+version: '1.0.0'
+author: Falko Müller
+supportpage: 'https://github.com/iceman-fx/simple_block_repeater'
+
+page:
+    title: 'SimpleBlockRepeater'
+    hidden: true

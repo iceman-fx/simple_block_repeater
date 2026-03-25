@@ -1,0 +1,182 @@
+@charset "utf-8";
+/* CSS Document for SimpleBlockRepeater */
+/* v1.0.0 */
+
+
+.sbr-block {
+    margin: 0px 0px 10px;
+    transition: opacity 0.2s ease;
+    border: 1px solid rgba(100,100,100, 0.2);
+    border-radius: 4px;
+    background: rgba(255,255,255, 0.09);
+    box-shadow: 0 5px 15px rgba(0,0,0, 0.08);
+    padding: 0px;
+    transition: all 0.2s ease;
+}
+
+/* Glow Effect */
+@keyframes sbr-block-glow {
+    0% {
+        box-shadow:
+            0 0 0 0 rgba(40, 167, 69, 0.8),
+            0 5px 15px rgba(0,0,0,.08);
+        transform: scale(1);
+    }
+    50% {
+        box-shadow:
+            0 0 0 15px rgba(40, 167, 69, 0.2),
+            0 0 30px rgba(40, 167, 69, 0.4),
+            0 8px 25px rgba(0,0,0,.15);
+        transform: scale(1.02);
+    }
+    100% {
+        box-shadow:
+            0 0 0 0 rgba(40, 167, 69, 0),
+            0 5px 15px rgba(0,0,0,.08);
+        transform: scale(1);
+    }
+}
+
+.sbr-block.sbr-block-glow {
+    animation: sbr-block-glow 1.2s ease-out;
+    border-color: rgba(40, 167, 69, 0.6) !important;
+    background: rgba(40, 167, 69, 0.03) !important;
+}
+
+.sbr-block .panel-heading, .sbr-block .panel-body { background: none; }
+
+.sbr-block .panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 12px;
+    gap: 8px;
+}
+.sbr-block .panel-heading:before, .sbr-block .panel-heading:after { display: none; }
+
+.sbr-block .panel-heading strong,
+.sbr-block .sbr-block-title {
+    line-height: 1;
+    flex: 1;
+}
+
+/* -------------------------------------------------------------------------
+   Drag Handle
+   ------------------------------------------------------------------------- */
+
+.sbr-drag-handle {
+    cursor: grab;
+    color: #aaa;
+    padding: 0 6px 0 0;
+    font-size: 13px;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: color 0.15s ease;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.sbr-drag-handle:hover {
+    color: #555;
+}
+
+.sbr-drag-handle:active {
+    cursor: grabbing;
+}
+
+/* Ghost-Element beim Sortieren (Sortable.js) */
+.sbr-block-ghost {
+    opacity: 0.4;
+    background: rgba(0, 120, 215, 0.05) !important;
+    border: 2px dashed rgba(0, 120, 215, 0.4) !important;
+}
+
+/* Aktiv gezogenes Element */
+.sbr-block-dragging {
+    box-shadow:
+        0 8px 30px rgba(0,0,0,0.18),
+        0 0 0 2px rgba(0, 120, 215, 0.3) !important;
+    background: #fff !important;
+    opacity: 1 !important;
+    cursor: grabbing !important;
+}
+
+/* Steuerungs-Buttons */
+.sbr-controls {
+    display: flex;
+    gap: 4px;
+    float: none !important;
+    flex-shrink: 0;
+}
+
+.sbr-controls .btn {
+    padding: 2px 7px;
+    line-height: 1.4;
+}
+.sbr-controls > .btn { min-width: 32px; padding: 2px 5px; }
+
+.sbr-controls .btn.disabled {
+    opacity: 0.35;
+    cursor: default;
+    pointer-events: none;
+}
+
+.sbr-controls .sbr-toggle  { background: rgba(18,181,94, 0.1); }
+.sbr-controls .sbr-duplicate { background: rgba(0, 120, 215, 0.08); }
+
+/* Hinzufügen-Button */
+.sbr-add-row {
+    margin-top: 6px;
+}
+
+.sbr-add-btn.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* -------------------------------------------------------------------------
+   Inaktiver Block
+   ------------------------------------------------------------------------- */
+
+.sbr-block.sbr-block-inactive .panel-heading {
+    background-color: #f5f5f5;
+    color: #999;
+}
+
+.sbr-block.sbr-block-inactive .sbr-toggle {
+    background: rgba(217,83,79, 0.1);
+}
+
+/* -------------------------------------------------------------------------
+   Validierung
+   ------------------------------------------------------------------------- */
+.sbr-error {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #a94442;
+}
+
+.sbr-block .has-error {
+    border-color: #a94442;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+}
+
+/* -------------------------------------------------------------------------
+   Buttons-Leiste immer rechts
+   ------------------------------------------------------------------------- */
+.sbr-block .panel-heading {
+    justify-content: space-between;
+}
+
+.sbr-controls {
+    margin-left: auto;
+}
+
+/* -------------------------------------------------------------------------
+   Leer-Zustand
+   ------------------------------------------------------------------------- */
+.sbr-empty-state {
+    padding: 4px 0;
+}

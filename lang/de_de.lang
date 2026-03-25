@@ -1,0 +1,10 @@
+# addon: simple_block_repeater de_de
+
+sbr_new = {0} hinzufügen
+sbr_add = Neuen Eintrag hinzufügen
+sbr_up = Nach oben
+sbr_down = Nach unten
+sbr_toggle = Status umschalten
+sbr_delete = Löschen
+sbr_duplicate = Duplizieren
+sbr_drag = Verschieben (Drag & Drop)
