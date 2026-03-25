@@ -147,20 +147,52 @@
     // -------------------------------------------------------------------------
 
     SBR.applyDefaults = function ($block) {
+
+        // Radio-Gruppen separat behandeln – nicht jeden Radio einzeln auswerten,
+        // sondern pro Gruppe (name) einmal entscheiden.
+        var handledRadioGroups = {};
+
         $block.find('input[data-default], textarea[data-default]').each(function () {
             var $field = $(this);
-            var val    = $field.val();
-            var def    = (val !== undefined && val !== null && val !== '' ? val : $field.attr('data-default'));
             var type   = ($field.attr('type') || '').toLowerCase();
 
-            if (type === 'checkbox') {
-                $field.prop('checked', def === 'checked' || def === '1' || def === 'true');
-            } else if (type === 'radio') {
+            if (type === 'radio') {
                 var name = $field.attr('name');
+                if (handledRadioGroups[name]) return; // Gruppe bereits verarbeitet
+                handledRadioGroups[name] = true;
+
+                // Gespeicherten Wert via data-selected vom ersten Radio der Gruppe lesen
+                var $first  = $block.find('input[type="radio"][name="' + name + '"]').first();
+                var saved   = $first.attr('data-selected');
+                var def     = $first.attr('data-default');
+
+                // saved bevorzugen, Fallback auf data-default
+                // Ungefüllter Placeholder {..} im JS-Template gilt als kein gespeicherter Wert
+                var hasSaved = (saved !== undefined && saved !== null && saved !== '' && !/\{[^}]+\}/.test(saved));
+                var target = hasSaved ? saved : def;
+
                 $block.find('input[type="radio"][name="' + name + '"]').each(function () {
-                    $(this).prop('checked', $(this).val() === def);
+                    $(this).prop('checked', $(this).val() === target);
                 });
+
+            } else if (type === 'checkbox') {
+                // Unterscheidung: neuer Block (data-selected fehlt oder ist ungefüllter Placeholder)
+                // vs. gespeicherter Block (data-selected vorhanden und kein {..})
+                var rawSel   = $field.attr('data-selected');
+                var hasSaved = (rawSel !== undefined && !/\{[^}]+\}/.test(rawSel));
+                if (hasSaved) {
+                    // Gespeicherter Zustand wiederherstellen
+                    $field.prop('checked', rawSel === $field.val() || rawSel === '1' || rawSel === 'true');
+                } else {
+                    // Neuer Block: data-default auswerten
+                    var def = $field.attr('data-default');
+                    $field.prop('checked', def === 'checked' || def === '1' || def === 'true');
+                }
+
             } else {
+                // Text, Number, Textarea etc.
+                var val = $field.val();
+                var def = (val !== undefined && val !== null && val !== '' ? val : $field.attr('data-default'));
                 $field.val(def);
             }
         });

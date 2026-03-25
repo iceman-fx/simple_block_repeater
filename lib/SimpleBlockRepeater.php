@@ -214,15 +214,48 @@ class SimpleBlockRepeater
     {
         $repeaterId = $this->id;
 
+        // {placeholder} mit gespeicherten Werten befüllen
         $filled = preg_replace_callback('/\{([a-zA-Z0-9_]+)\}/', function ($matches) use ($data) {
             $key = $matches[1];
             return isset($data[$key]) ? rex_escape($data[$key]) : '';
         }, $template);
 
+        // name-Attribute auf sbr_id[index][feldname] umschreiben
         $filled = preg_replace_callback(
             '/\bname=["\']([^"\']+)["\']/i',
             function ($matches) use ($repeaterId, $index) {
                 return 'name="sbr_' . $repeaterId . '[' . $index . '][' . $matches[1] . ']"';
+            },
+            $filled
+        );
+
+        // Checkboxen: automatisch Hidden-Field davor injizieren (falls noch nicht vorhanden).
+        // So wird beim Absenden immer ein Wert übertragen, auch wenn die Checkbox nicht angehakt ist.
+        $existingHiddenNames = [];
+        preg_match_all('/<input[^>]*\stype=["\']hidden["\'][^>]*\sname=["\']([^"\']*)["\'][^>]*>/i', $filled, $hiddenMatches);
+        if (!empty($hiddenMatches[1])) {
+            $existingHiddenNames = $hiddenMatches[1];
+        }
+
+        $filled = preg_replace_callback(
+            '/<input(\s[^>]*)?\stype=["\']checkbox["\']([^>]*)?\/?>\s*/i',
+            function ($matches) use (&$existingHiddenNames) {
+                $tag = $matches[0];
+
+                // name aus dem Checkbox-Tag extrahieren
+                if (!preg_match('/\bname=["\']([^"\']*)["\']/', $tag, $nameMatch)) {
+                    return $tag;
+                }
+                $name = $nameMatch[1];
+
+                // Hidden-Field bereits vorhanden? Dann nicht nochmal erzeugen.
+                if (in_array($name, $existingHiddenNames)) {
+                    return $tag;
+                }
+
+                // Hidden-Field merken und davor injizieren (value="" = nicht angehakt)
+                $existingHiddenNames[] = $name;
+                return '<input type="hidden" name="' . $name . '" value="">' . "\n" . $tag;
             },
             $filled
         );
